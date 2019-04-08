@@ -145,6 +145,18 @@ namespace ADTConvert2.Extensions
 
             binaryWriter.Write((char)0);
         }
+        /// <summary>
+        /// Writes the provided string to the data stream as a C-style null-terminated string.
+        /// </summary>
+        /// <param name="binaryWriter">The current <see cref="BinaryWriter"/> object.</param>
+        /// <param name="inputStrings">Input string array.</param>
+        public static void WriteNullTerminatedString(this BinaryWriter binaryWriter, string[] inputStrings)
+        {
+            foreach (var s in inputStrings)
+            {
+                binaryWriter.WriteNullTerminatedString(s);
+            }
+        }
 
         /// <summary>
         /// Writes an RIFF-style chunk signature to the data stream.
