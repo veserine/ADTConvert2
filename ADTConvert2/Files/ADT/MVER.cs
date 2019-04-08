@@ -1,5 +1,5 @@
-﻿using System.IO;
-using ADTConvert2.Files.Interfaces;
+﻿using ADTConvert2.Files.Interfaces;
+using System.IO;
 
 namespace ADTConvert2.Files
 {
@@ -38,11 +38,9 @@ namespace ADTConvert2.Files
         public void LoadBinaryData(byte[] inData)
         {
             using (var ms = new MemoryStream(inData))
+            using (var br = new BinaryReader(ms))
             {
-                using (var br = new BinaryReader(ms))
-                {
-                    Version = br.ReadUInt32();
-                }
+                Version = br.ReadUInt32();
             }
         }
 
@@ -52,24 +50,19 @@ namespace ADTConvert2.Files
             return Signature;
         }
 
-        /// <summary>
-        /// Gets the size of the data contained in this chunk.
-        /// </summary>
-        /// <returns>The size.</returns>
-        public static uint GetSize()
+        /// <inheritdoc/>
+        public uint GetSize()
         {
-            return 4;
+            return (uint)Serialize().Length;
         }
 
         /// <inheritdoc/>
         public byte[] Serialize()
         {
             using (var ms = new MemoryStream())
+            using (var bw = new BinaryWriter(ms))
             {
-                using (var bw = new BinaryWriter(ms))
-                {
-                    bw.Write(Version);
-                }
+                bw.Write(Version);
 
                 return ms.ToArray();
             }

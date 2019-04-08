@@ -27,6 +27,12 @@ namespace ADTConvert2.Files.Interfaces
     public interface IBinarySerializable
     {
         /// <summary>
+        /// Gets the size of the data contained in this chunk.
+        /// </summary>
+        /// <returns>The size.</returns>
+        uint GetSize();
+
+        /// <summary>
         /// Serializes the current object into a byte array.
         /// </summary>
         /// <returns>The serialized object.</returns>
