@@ -1,8 +1,7 @@
-﻿using ADTConvert2.Files.Interfaces;
-using System;
+﻿using ADTConvert2.Files.ADT.Entry;
+using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace ADTConvert2.Files.ADT
 {
@@ -11,9 +10,9 @@ namespace ADTConvert2.Files.ADT
         public const string Signature = "MDDF";
 
         /// <summary>
-        /// Gets or sets <see cref="DoodadDef"/>s.
+        /// Gets or sets <see cref="MDDFEntry"/>s.
         /// </summary>
-        public List<DoodadDef> DoodadDefs { get; set; }
+        public List<MDDFEntry> MDDFEntrys { get; set; }
 
         public MDDF()
         {
@@ -46,11 +45,11 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var doodadCount = br.BaseStream.Length / DoodadDef.GetSize();
+                var doodadCount = br.BaseStream.Length / MDDFEntry.GetSize();
 
                 for (var i = 0; i < doodadCount; ++i)
                 {
-                    DoodadDefs.Add(new DoodadDef(br.ReadBytes(DoodadDef.GetSize())));
+                    MDDFEntrys.Add(new MDDFEntry(br.ReadBytes(MDDFEntry.GetSize())));
                 }
             }
         }
@@ -61,9 +60,9 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (DoodadDef doodad in DoodadDefs)
+                foreach (MDDFEntry doodad in MDDFEntrys)
                 {
-                    ms.Write(doodad.Serialize());
+                    bw.Write(doodad.Serialize());
                 }
 
                 return ms.ToArray();

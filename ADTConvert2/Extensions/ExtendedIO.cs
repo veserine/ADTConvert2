@@ -3,7 +3,6 @@ using System;
 using System.IO;
 using SharpDX;
 using System.Text;
-using System.Collections.Generic;
 using ADTConvert2.Files.Structures;
 
 namespace ADTConvert2.Extensions
@@ -73,6 +72,17 @@ namespace ADTConvert2.Extensions
                         throw new ArgumentOutOfRangeException(nameof(convertTo), convertTo, null);
                     }
             }
+        }
+
+        /// <summary>
+        /// Reads a 12-byte <see cref="Rotator"/> from the data stream and advances the position of the stream by
+        /// 12 bytes.
+        /// </summary>
+        /// <returns>The rotator.</returns>
+        /// <param name="binaryReader">The reader.</param>
+        public static Rotator ReadRotator(this BinaryReader binaryReader)
+        {
+            return new Rotator(binaryReader.ReadVector3());
         }
 
         /// <summary>
@@ -224,6 +234,18 @@ namespace ADTConvert2.Extensions
                 default:
                     throw new ArgumentOutOfRangeException(nameof(storeAs), storeAs, null);
             }
+        }
+
+        /// <summary>
+        /// Writes a 12-byte <see cref="Rotator"/> value to the data stream in Pitch/Yaw/Roll order.
+        /// </summary>
+        /// <param name="binaryWriter">The current <see cref="BinaryWriter"/> object.</param>
+        /// <param name="inRotator">Rotator.</param>
+        public static void WriteRotator(this BinaryWriter binaryWriter, Rotator inRotator)
+        {
+            binaryWriter.Write(inRotator.Pitch);
+            binaryWriter.Write(inRotator.Yaw);
+            binaryWriter.Write(inRotator.Roll);
         }
 
         /// <summary>

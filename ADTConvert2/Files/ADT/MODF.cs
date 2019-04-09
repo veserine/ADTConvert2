@@ -1,8 +1,7 @@
-﻿using ADTConvert2.Files.Interfaces;
-using System;
+﻿using ADTConvert2.Files.ADT.Entry;
+using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
 namespace ADTConvert2.Files.ADT
 {
@@ -11,9 +10,9 @@ namespace ADTConvert2.Files.ADT
         public const string Signature = "MODF";
 
         /// <summary>
-        /// Gets or sets <see cref="MapObjDef"/>s.
+        /// Gets or sets <see cref="MODFEntry"/>s.
         /// </summary>
-        public List<MapObjDef> MapObjDefs { get; set; }
+        public List<MODFEntry> MODFEntrys { get; set; }
 
         public MODF()
         {
@@ -46,11 +45,11 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var objCount = br.BaseStream.Length / MapObjDef.GetSize();
+                var objCount = br.BaseStream.Length / MODFEntry.GetSize();
 
                 for (var i = 0; i < objCount; ++i)
                 {
-                    MapObjDefs.Add(new MapObjDef(br.ReadBytes(MapObjDef.GetSize())));
+                    MODFEntrys.Add(new MODFEntry(br.ReadBytes(MODFEntry.GetSize())));
                 }
             }
         }
@@ -61,9 +60,9 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (MapObjDef obj in MapObjDefs)
+                foreach (MODFEntry obj in MODFEntrys)
                 {
-                    ms.Write(obj.Serialize());
+                    bw.Write(obj.Serialize());
                 }
 
                 return ms.ToArray();
