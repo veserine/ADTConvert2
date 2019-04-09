@@ -1,13 +1,10 @@
 ﻿using ADTConvert2.Extensions;
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using SharpDX;
 using ADTConvert2.Files.Structures;
 using ADTConvert2.Files.ADT.Flags;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Entry
 {
     /// <summary>
     /// An entry struct containing information about the WMO.

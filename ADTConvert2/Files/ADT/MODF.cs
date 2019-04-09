@@ -1,4 +1,5 @@
-﻿using ADTConvert2.Files.Interfaces;
+﻿using ADTConvert2.Files.ADT.Entry;
+using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
