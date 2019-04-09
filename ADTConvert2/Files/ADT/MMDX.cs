@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 
-namespace Warcraft.ADT.Chunks
+namespace ADTConvert2.Files.ADT
 {
     /// <summary>
     /// MMDX Chunk - Contains a list of all referenced M2 models in this ADT.

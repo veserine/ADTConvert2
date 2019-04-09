@@ -1,7 +1,7 @@
 ﻿using ADTConvert2.Files.Interfaces;
 using System.IO;
 
-namespace ADTConvert2.Files
+namespace ADTConvert2.Files.ADT
 {
     /// <summary>
     /// MVER Chunk - Contains the ADT version.

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-namespace Warcraft.ADT.Chunks
+namespace ADTConvert2.Files.ADT
 {
     /// <summary>
     /// MMID Chunk - Contains a list of M2 model indexes.
