@@ -1,10 +1,9 @@
-﻿using ADTConvert2.Files.ADT.Entry;
-using System;
+﻿using System;
 
 namespace ADTConvert2.Files.ADT.Flags
 {
     /// <summary>
-    /// Flags for the <see cref="MDDFEntry"/>.
+    /// Flags for the <see cref="MODFFlags"/>.
     /// </summary>
     [Flags]
     public enum MODFFlags : ushort

@@ -1,5 +1,4 @@
-﻿using ADTConvert2.Files.ADT.Entry;
-using System;
+﻿using System;
 
 namespace ADTConvert2.Files.ADT.Flags
 {

@@ -62,7 +62,7 @@ namespace ADTConvert2.Files.ADT
             {
                 foreach (MODFEntry obj in MODFEntrys)
                 {
-                    ms.Write(obj.Serialize());
+                    bw.Write(obj.Serialize());
                 }
 
                 return ms.ToArray();
