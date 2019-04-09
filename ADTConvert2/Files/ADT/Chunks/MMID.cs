@@ -1,35 +1,36 @@
 ﻿using ADTConvert2.Files.Interfaces;
+using System.Collections.Generic;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Chucks
 {
     /// <summary>
-    /// MVER Chunk - Contains the ADT version.
+    /// MMID Chunk - Contains a list of M2 model indexes.
     /// </summary>
-    public class MVER : IIFFChunk, IBinarySerializable
+    public class MMID : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MVER";
+        public const string Signature = "MMID";
 
         /// <summary>
-        /// Gets or sets the ADT version.
+        /// Gets or sets the list of indexes for models in an MMID chunk.
         /// </summary>
-        public uint Version { get; set; }
+        public List<uint> ModelFilenameOffsets { get; set; } = new List<uint>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MVER"/> class.
+        /// Initializes a new instance of the <see cref="MMID"/> class.
         /// </summary>
-        public MVER()
+        public MMID()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MVER"/> class.
+        /// Initializes a new instance of the <see cref="MMID"/> class.
         /// </summary>
-        /// <param name="inData">ExtendedData.</param>
-        public MVER(byte[] inData)
+        /// <param name="inData">The binary data.</param>
+        public MMID(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -40,7 +41,11 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                Version = br.ReadUInt32();
+                var offsetCount = inData.Length / 4;
+                for (var i = 0; i < offsetCount; ++i)
+                {
+                    ModelFilenameOffsets.Add(br.ReadUInt32());
+                }
             }
         }
 
@@ -62,7 +67,10 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                bw.Write(Version);
+                foreach (uint modelFilenameOffset in ModelFilenameOffsets)
+                {
+                    bw.Write(modelFilenameOffset);
+                }
 
                 return ms.ToArray();
             }

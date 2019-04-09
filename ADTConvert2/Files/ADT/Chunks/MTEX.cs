@@ -1,33 +1,37 @@
-﻿using ADTConvert2.Files.Interfaces;
+﻿using ADTConvert2.Extensions;
+using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Chucks
 {
-    public class MWID : IIFFChunk, IBinarySerializable
+    /// <summary>
+    /// MTEX Chunk - Contains a list of all referenced textures in this ADT.
+    /// </summary>
+    public class MTEX : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MWID";
+        public const string Signature = "MTEX";
 
         /// <summary>
-        /// Gets or sets the list of indexes for models in an MWID chunk.
+        /// Gets or sets a list of full paths to the textures referenced in this ADT.
         /// </summary>
-        public List<uint> ModelFilenameOffsets { get; set; } = new List<uint>();
+        public List<string> Filenames { get; set; } = new List<string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MWID"/> class.
+        /// Initializes a new instance of the <see cref="MTEX"/> class.
         /// </summary>
-        public MWID()
+        public MTEX()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MWID"/> class.
+        /// Initializes a new instance of the <see cref="MTEX"/> class.
         /// </summary>
-        /// <param name="inData">The binary data.</param>
-        public MWID(byte[] inData)
+        /// <param name="inData">ExtendedData.</param>
+        public MTEX(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -38,10 +42,9 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var offsetCount = inData.Length / 4;
-                for (var i = 0; i < offsetCount; ++i)
+                while (br.BaseStream.Position != br.BaseStream.Length)
                 {
-                    ModelFilenameOffsets.Add(br.ReadUInt32());
+                    Filenames.Add(br.ReadNullTerminatedString());
                 }
             }
         }
@@ -64,10 +67,7 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (uint modelFilenameOffset in ModelFilenameOffsets)
-                {
-                    bw.Write(modelFilenameOffset);
-                }
+                bw.WriteNullTerminatedString(Filenames.ToArray());
 
                 return ms.ToArray();
             }

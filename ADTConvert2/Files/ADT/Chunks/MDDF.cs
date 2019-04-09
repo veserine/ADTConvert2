@@ -1,28 +1,28 @@
-﻿using ADTConvert2.Files.ADT.Entry;
+﻿using ADTConvert2.Files.ADT.Entrys;
 using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Chunks
 {
-    class MODF : IIFFChunk, IBinarySerializable
+    class MDDF : IIFFChunk, IBinarySerializable
     {
-        public const string Signature = "MODF";
+        public const string Signature = "MDDF";
 
         /// <summary>
-        /// Gets or sets <see cref="MODFEntry"/>s.
+        /// Gets or sets <see cref="MDDFEntry"/>s.
         /// </summary>
-        public List<MODFEntry> MODFEntrys { get; set; }
+        public List<MDDFEntry> MDDFEntrys { get; set; }
 
-        public MODF()
+        public MDDF()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MODF"/> class.
+        /// Initializes a new instance of the <see cref="MDDF"/> class.
         /// </summary>
         /// <param name="inData">The binary data.</param>
-        public MODF(byte[] inData)
+        public MDDF(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -45,11 +45,11 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var objCount = br.BaseStream.Length / MODFEntry.GetSize();
+                var doodadCount = br.BaseStream.Length / MDDFEntry.GetSize();
 
-                for (var i = 0; i < objCount; ++i)
+                for (var i = 0; i < doodadCount; ++i)
                 {
-                    MODFEntrys.Add(new MODFEntry(br.ReadBytes(MODFEntry.GetSize())));
+                    MDDFEntrys.Add(new MDDFEntry(br.ReadBytes(MDDFEntry.GetSize())));
                 }
             }
         }
@@ -60,9 +60,9 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (MODFEntry obj in MODFEntrys)
+                foreach (MDDFEntry doodad in MDDFEntrys)
                 {
-                    bw.Write(obj.Serialize());
+                    bw.Write(doodad.Serialize());
                 }
 
                 return ms.ToArray();

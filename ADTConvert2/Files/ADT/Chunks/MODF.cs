@@ -1,36 +1,28 @@
-﻿using ADTConvert2.Extensions;
+﻿using ADTConvert2.Files.ADT.Entrys;
 using ADTConvert2.Files.Interfaces;
-using ADTConvert2.Files.Wotlk.Entry;
-using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace ADTConvert2.Files
+namespace ADTConvert2.Files.ADT.Chucks
 {
-    class MCIN : IIFFChunk, IBinarySerializable
+    class MODF : IIFFChunk, IBinarySerializable
     {
-        public const string Signature = "MCIN";
+        public const string Signature = "MODF";
 
         /// <summary>
-        /// Gets or sets <see cref="MCNK"/> pointers.
-        /// <para>Should always be 256.</para>
+        /// Gets or sets <see cref="MODFEntry"/>s.
         /// </summary>
-        List<MCINEntry> Entries { get; set; }
+        public List<MODFEntry> MODFEntrys { get; set; }
 
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MCIN"/> class.
-        /// </summary>
-        public MCIN()
+        public MODF()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MCIN"/> class.
+        /// Initializes a new instance of the <see cref="MODF"/> class.
         /// </summary>
-        /// <param name="inData">ExtendedData.</param>
-        public MCIN(byte[] inData)
+        /// <param name="inData">The binary data.</param>
+        public MODF(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -53,11 +45,11 @@ namespace ADTConvert2.Files
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                var entryCount = br.BaseStream.Length / MCINEntry.GetSize();
+                var objCount = br.BaseStream.Length / MODFEntry.GetSize();
 
-                for (var i = 0; i < entryCount; ++i)
+                for (var i = 0; i < objCount; ++i)
                 {
-                    Entries.Add(new MCINEntry(br.ReadBytes(MCINEntry.GetSize())));
+                    MODFEntrys.Add(new MODFEntry(br.ReadBytes(MODFEntry.GetSize())));
                 }
             }
         }
@@ -68,9 +60,9 @@ namespace ADTConvert2.Files
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                foreach (MCINEntry entry in Entries)
+                foreach (MODFEntry obj in MODFEntrys)
                 {
-                    ms.Write(entry.Serialize());
+                    bw.Write(obj.Serialize());
                 }
 
                 return ms.ToArray();

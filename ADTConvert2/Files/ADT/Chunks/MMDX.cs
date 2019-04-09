@@ -3,35 +3,35 @@ using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Chucks
 {
     /// <summary>
-    /// MTEX Chunk - Contains a list of all referenced textures in this ADT.
+    /// MMDX Chunk - Contains a list of all referenced M2 models in this ADT.
     /// </summary>
-    public class MTEX : IIFFChunk, IBinarySerializable
+    public class MMDX : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MTEX";
+        public const string Signature = "MMDX";
 
         /// <summary>
-        /// Gets or sets a list of full paths to the textures referenced in this ADT.
+        /// Gets or sets a list of full paths to the M2 models referenced in this ADT.
         /// </summary>
         public List<string> Filenames { get; set; } = new List<string>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MTEX"/> class.
+        /// Initializes a new instance of the <see cref="MMDX"/> class.
         /// </summary>
-        public MTEX()
+        public MMDX()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MTEX"/> class.
+        /// Initializes a new instance of the <see cref="MMDX"/> class.
         /// </summary>
         /// <param name="inData">ExtendedData.</param>
-        public MTEX(byte[] inData)
+        public MMDX(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -42,10 +42,7 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                while (br.BaseStream.Position != br.BaseStream.Length)
-                {
-                    Filenames.Add(br.ReadNullTerminatedString());
-                }
+                Filenames.Add(br.ReadNullTerminatedString());
             }
         }
 

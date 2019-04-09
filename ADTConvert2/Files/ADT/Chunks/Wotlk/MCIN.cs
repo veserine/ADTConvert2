@@ -1,37 +1,33 @@
-﻿using ADTConvert2.Extensions;
+﻿using ADTConvert2.Files.ADT.Entrys.Wotlk;
 using ADTConvert2.Files.Interfaces;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT
+namespace ADTConvert2.Files.ADT.Chucks.Wotlk
 {
-    /// <summary>
-    /// MWMO Chunk - Contains a list of all referenced WMO models in this ADT.
-    /// </summary>
-    class MWMO : IIFFChunk, IBinarySerializable
+    class MCIN : IIFFChunk, IBinarySerializable
     {
-        public const string Signature = "MWMO";
+        public const string Signature = "MCIN";
 
         /// <summary>
-        /// Gets or sets a list of full paths to the M2 models referenced in this ADT.
+        /// Gets or sets <see cref="MCNK"/> pointers.
+        /// <para>Should always be 256.</para>
         /// </summary>
-        public List<string> Filenames { get; set; } = new List<string>();
+        List<MCINEntry> Entries { get; set; }
+
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MWMO"/> class.
+        /// Initializes a new instance of the <see cref="MCIN"/> class.
         /// </summary>
-        public MWMO()
+        public MCIN()
         {
-
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MWMO"/> class.
+        /// Initializes a new instance of the <see cref="MCIN"/> class.
         /// </summary>
         /// <param name="inData">ExtendedData.</param>
-        public MWMO(byte[] inData)
+        public MCIN(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -54,7 +50,12 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                Filenames.Add(br.ReadNullTerminatedString());
+                var entryCount = br.BaseStream.Length / MCINEntry.GetSize();
+
+                for (var i = 0; i < entryCount; ++i)
+                {
+                    Entries.Add(new MCINEntry(br.ReadBytes(MCINEntry.GetSize())));
+                }
             }
         }
 
@@ -64,7 +65,10 @@ namespace ADTConvert2.Files.ADT
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                bw.WriteNullTerminatedString(Filenames.ToArray());
+                foreach (MCINEntry entry in Entries)
+                {
+                    ms.Write(entry.Serialize());
+                }
 
                 return ms.ToArray();
             }
