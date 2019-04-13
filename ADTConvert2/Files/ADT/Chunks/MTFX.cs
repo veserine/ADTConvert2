@@ -1,4 +1,4 @@
-﻿using ADTConvert2.Extensions;
+﻿using ADTConvert2.Files.ADT.Flags;
 using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
@@ -6,32 +6,29 @@ using System.IO;
 namespace ADTConvert2.Files.ADT.Chunks
 {
     /// <summary>
-    /// MMDX Chunk - Contains a list of all referenced M2 models in this ADT.
+    /// MTFX Chunk - Contains the ADT version.
     /// </summary>
-    public class MMDX : IIFFChunk, IBinarySerializable
+    public class MTFX : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MMDX";
+        public const string Signature = "MTXF";
 
         /// <summary>
-        /// Gets or sets a list of full paths to the M2 models referenced in this ADT.
+        /// Gets the texture flags.
         /// </summary>
-        public List<string> Filenames { get; set; } = new List<string>();
+        public List<MTXFFlags> TextureFlags { get; } = new List<MTXFFlags>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MMDX"/> class.
-        /// </summary>
-        public MMDX()
+        public MTFX()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MMDX"/> class.
+        /// Initializes a new instance of the <see cref="MTFX"/> class.
         /// </summary>
         /// <param name="inData">ExtendedData.</param>
-        public MMDX(byte[] inData)
+        public MTFX(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -42,9 +39,11 @@ namespace ADTConvert2.Files.ADT.Chunks
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                while (br.BaseStream.Position != br.BaseStream.Length)
+                var entryCount = br.BaseStream.Length / 4;
+
+                for (var i = 0; i < entryCount; ++i)
                 {
-                    Filenames.Add(br.ReadNullTerminatedString());
+                    TextureFlags.Add((MTXFFlags)br.ReadUInt32());
                 }
             }
         }
@@ -67,7 +66,10 @@ namespace ADTConvert2.Files.ADT.Chunks
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                bw.WriteNullTerminatedString(Filenames.ToArray());
+                foreach(MTXFFlags textureFlag in TextureFlags)
+                {
+                    bw.Write((uint)textureFlag);
+                }
 
                 return ms.ToArray();
             }

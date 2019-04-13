@@ -1,37 +1,39 @@
 ﻿using ADTConvert2.Extensions;
 using ADTConvert2.Files.Interfaces;
-using System.Collections.Generic;
+using ADTConvert2.Files.Structures;
 using System.IO;
 
 namespace ADTConvert2.Files.ADT.Chunks
 {
     /// <summary>
-    /// MMDX Chunk - Contains a list of all referenced M2 models in this ADT.
+    /// MFBO chunk - holds a bounding box for the terrain chunk.
     /// </summary>
-    public class MMDX : IIFFChunk, IBinarySerializable
+    public class MFBO : IIFFChunk, IBinarySerializable
     {
         /// <summary>
         /// Holds the binary chunk signature.
         /// </summary>
-        public const string Signature = "MMDX";
+        public const string Signature = "MFBO";
 
         /// <summary>
-        /// Gets or sets a list of full paths to the M2 models referenced in this ADT.
+        /// Gets or sets the maximum bounding plane.
         /// </summary>
-        public List<string> Filenames { get; set; } = new List<string>();
+        public ShortPlane Maximum { get; set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MMDX"/> class.
+        /// Gets or sets the minimum bounding plane.
         /// </summary>
-        public MMDX()
+        public ShortPlane Minimum { get; set; }
+
+        public MFBO()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MMDX"/> class.
+        /// Initializes a new instance of the <see cref="MFBO"/> class.
         /// </summary>
-        /// <param name="inData">ExtendedData.</param>
-        public MMDX(byte[] inData)
+        /// <param name="inData">The binary data.</param>
+        public MFBO(byte[] inData)
         {
             LoadBinaryData(inData);
         }
@@ -42,10 +44,8 @@ namespace ADTConvert2.Files.ADT.Chunks
             using (var ms = new MemoryStream(inData))
             using (var br = new BinaryReader(ms))
             {
-                while (br.BaseStream.Position != br.BaseStream.Length)
-                {
-                    Filenames.Add(br.ReadNullTerminatedString());
-                }
+                Maximum = br.ReadShortPlane();
+                Minimum = br.ReadShortPlane();
             }
         }
 
@@ -67,7 +67,8 @@ namespace ADTConvert2.Files.ADT.Chunks
             using (var ms = new MemoryStream())
             using (var bw = new BinaryWriter(ms))
             {
-                bw.WriteNullTerminatedString(Filenames.ToArray());
+                bw.WriteShortPlane(Maximum);
+                bw.WriteShortPlane(Minimum);
 
                 return ms.ToArray();
             }

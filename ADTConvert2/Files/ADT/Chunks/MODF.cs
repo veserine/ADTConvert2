@@ -3,16 +3,16 @@ using ADTConvert2.Files.Interfaces;
 using System.Collections.Generic;
 using System.IO;
 
-namespace ADTConvert2.Files.ADT.Chucks
+namespace ADTConvert2.Files.ADT.Chunks
 {
-    class MODF : IIFFChunk, IBinarySerializable
+    public class MODF : IIFFChunk, IBinarySerializable
     {
         public const string Signature = "MODF";
 
         /// <summary>
         /// Gets or sets <see cref="MODFEntry"/>s.
         /// </summary>
-        public List<MODFEntry> MODFEntrys { get; set; }
+        public List<MODFEntry> MODFEntrys { get; set; } = new List<MODFEntry>();
 
         public MODF()
         {
