@@ -6,9 +6,14 @@ image:
 - Ubuntu
 configuration: Release
 platform: Any CPU
+clone_depth: 5
 before_build:
-- ps: dotnet restore
+- ps: >-
+    git submodule update --init --recursive
+
+    dotnet restore
 build:
+  project: ADTConvert2.sln
   publish_nuget: true
   publish_nuget_symbols: true
   include_nuget_references: true

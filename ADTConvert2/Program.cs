@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using ADTConvert2.Files.ADT.Terrain.Wotlk;
+using Warcraft.NET.Files.ADT.Terrain.Wotlk;
 
 namespace ADTConvert2
 {
